@@ -19,6 +19,9 @@ export PATH="$PREFIX/bin:/usr/bin/:$PATH"
 CPP_SOURCES := $(wildcard kernel/*.cpp)
 CPP_OBJECTS := $(CPP_SOURCES:.cpp=.o)
 CPP_OBJECTS := $(CPP_OBJECTS:kernel/%=compiled/%)
+COMPILED_DIR := compiled/
+PROGRAM_SOURCES := $(wildcard programs/*/*.cpp)
+PROGRAM_OBJECTS := $(addprefix $(COMPILED_DIR),$(notdir $(PROGRAM_SOURCES:.cpp=.o)))
 
 all: X99.iso
 
@@ -26,11 +29,15 @@ X99.iso: iso/boot/X99.bin
 	/bin/cp compiled/X99.bin iso/boot/X99.bin
 	/usr/bin/grub-mkrescue -o X99.iso iso
 
-iso/boot/X99.bin: compiled/boot.o $(CPP_OBJECTS)
+iso/boot/X99.bin: compiled/boot.o $(CPP_OBJECTS) $(PROGRAM_OBJECTS)
 	${HOME}/opt/cross/bin/${TARGET}-gcc -T misc/linker.ld -o compiled/X99.bin -ffreestanding -O2 -nostdlib $^ -lgcc
 
 compiled/boot.o: misc/boot.asm
+	/bin/echo $(PROGRAM_OBJECTS)
 	${HOME}/opt/cross/bin/${TARGET}-as misc/boot.asm -o compiled/boot.o
+
+compiled/%.o: programs/*/%.cpp
+	${HOME}/opt/cross/bin/${TARGET}-g++ -c $^ -o $@ -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
 
 compiled/%.o: kernel/%.cpp
 	${HOME}/opt/cross/bin/${TARGET}-g++ -c $^ -o $@ -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti

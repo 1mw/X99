@@ -81,4 +81,10 @@ namespace xlib
 	{
 		
 	}
+	
+	namespace program
+	{
+		X99Program::X99Program() {}
+		bool X99Program::start() {return true;}
+	}
 }

@@ -12,4 +12,15 @@ extern "C"
 void kernel_main()
 {
 	xlib::video::writeString("Welcome to the X99 operating system.");
+	xlib::video::newLine();
+	xlib::video::writeString("Starting bar...");
+	xlib::video::newLine();
+	p.start();
+	
+	xlib::video::newLine();
+	xlib::video::writeString("Done executing bar.");
+	xlib::video::newLine();
+	xlib::video::writeString("Starting foo...");
+	xlib::video::newLine();
+	f.start();
 }

@@ -44,6 +44,20 @@ namespace xlib
 			return ret;
 		}
 	}
+	
+	namespace program
+	{
+		class X99Program
+		{
+		public:
+			
+			X99Program();
+			
+			const char* aliases[];
+			
+			virtual bool start();
+		};
+	}
 }
 
 #endif
