@@ -1,3 +1,9 @@
+// x99program_foo.cpp
+//
+// Foo is an example program for X99.
+//
+// Copyright (c) 2015, Mark Aldrich, All rights reserved.
+
 #include "x99program_foo.h"
 #include "../../kernel/xlib.h"
 #include "foo.h"

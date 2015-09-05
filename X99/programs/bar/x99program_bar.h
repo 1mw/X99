@@ -1,3 +1,9 @@
+// x99program_bar.h
+//
+// Bar is an example program for X99.
+//
+// Copyright (c) 2015, Mark Aldrich, All rights reserved.
+
 #ifndef ___x99program_bar_
 #define ___x99program_bar_
 
