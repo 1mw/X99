@@ -158,47 +158,54 @@ char xlib_io_getChar()
 char* xlib_io_getLine()
 {
     int startPos = xlib_video_row * 80 + xlib_video_column;
+    char buf[400] = {0};
+    int bufPos = 0;
 
     while(1) {
         char c = xlib_io_getChar();
         switch(c) {
-            case '\b':
-                if((xlib_video_row * 80 + xlib_video_column) >= startPos) {
+            case '\b': {
+                if(xlib_video_row * 80 + xlib_video_column > startPos) {
                     if(xlib_video_column == 0) {
-                        xlib_video_row -= 2;
-                        xlib_video_column = xlib_video_MAX_COLUMN;
+                        xlib_video_column = xlib_video_MAX_COLUMN - 1;
+                        xlib_video_row--;
+                        xlib_video_writeString(" ");
 
-                        char none = 0;
-                        xlib_video_writeString(&none);
+                        xlib_video_column = xlib_video_MAX_COLUMN - 1;
+                        xlib_video_row--;
+
+                        buf[bufPos] = 0;
+                        buf[bufPos + 1] = 0;
+                        bufPos -= 2;
                     } else {
                         xlib_video_column--;
+                        xlib_video_writeString(" ");
+                        xlib_video_column--;
+
+                        buf[bufPos] = 0;
+                        bufPos--;
                     }
                 }
                 break;
+            }
 
-            case '\n':
-                {
-                    // Take note of current position
-                    int endPos = xlib_video_row * 80 + xlib_video_column;
+            case '\n': {
+                xlib_video_newLine();
+                return &buf[0];
+            }
 
-                    // Declare buffer
-                    char buf[400] = {0};
+            default: {
+                // Use temporary value to print because xlib_video_writeString
+                // is expecting a null-terminated-string.
+                char tmp[2];
+                tmp[0] = c;
+                tmp[1] = 0;
 
-                    // Get the typed characters from the screen
-                    int i;
-                    for(i = startPos; i < endPos; i++) {
-                        char* u = xlib_video_VIDEO_MEMORY + i * 2;
-                        char t = *u;
-                        t >> 4;
-                        buf[i - startPos] = t;
-                    }
-
-                    return &buf;
-                }
-
-            default:
-                xlib_video_writeString(&c);
+                xlib_video_writeString(&tmp[0]);
+                buf[bufPos] = c;
+                bufPos++;
                 break;
+            }
         }
     }
 }
