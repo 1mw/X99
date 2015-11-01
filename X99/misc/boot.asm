@@ -24,6 +24,12 @@ _start:
 	# Apply X99's new stack
 	movl $stack_top, %esp
 
+	# Push the given multiboot structure from GRUB to the kernel using the
+	# C parameter pushing style. The eax register is the magic number, and the
+	# ebx register is the pointer to the actual table.
+	pushl %eax
+	pushl %ebx
+
 	# Call kernel
 	call kernel_main
 

@@ -16,13 +16,16 @@ void xlib_video_writeString(const char* string)
 {
     while(*string != 0) {
 		char* v = (char*) (xlib_video_VIDEO_MEMORY + (((xlib_video_row * 80) + xlib_video_column) * 2));
-		*v = *string;
-		xlib_video_column++;
+        if(*string != '\n') {
+            *v = *string;
+            xlib_video_column++;
 
-		if(xlib_video_column >= xlib_video_MAX_COLUMN)
-		{
-			xlib_video_newLine();
-		}
+      		if(xlib_video_column >= xlib_video_MAX_COLUMN) {
+      			xlib_video_newLine();
+      		}
+        } else {
+            xlib_video_newLine();
+        }
 
 		string++;
 	}
@@ -34,14 +37,18 @@ void xlib_video_writef(const char* formattedString)
     while(*formattedString != 0) {
         char* v = (char*) (xlib_video_VIDEO_MEMORY + (((xlib_video_row * 80) + xlib_video_column) * 2));
         if(*formattedString != '%') {
-            *v++ = *formattedString;
-            if(color != 0)
-                *v = color;
+            if(*formattedString != '\n') {
+                *v++ = *formattedString;
+                if(color != 0)
+                    *v = color;
 
-            xlib_video_column++;
+                xlib_video_column++;
 
-            if(xlib_video_column >= xlib_video_MAX_COLUMN)
+                if(xlib_video_column >= xlib_video_MAX_COLUMN)
+                    xlib_video_newLine();
+            } else {
                 xlib_video_newLine();
+            }
 
             formattedString++;
         } else {
@@ -257,9 +264,51 @@ void xlib_sys_panic(char* message)
 ///
 /// xlib memory functions (no prefix because of how common they are)
 ///
-unsigned long last = 0;
+unsigned long xlib_memory_last = 0;
+bool xlib_memory_didInit = false;
 
-void* malloc(int size);
+void xlib_memory_init(multiboot_info_t* mbt, unsigned int magic) {
+    xlib_video_writeString("    Making sure memory was not already initiated...");
+    // Make sure this is the first time
+    if(xlib_memory_didInit) {
+        xlib_sys_panic("xlib_memory_init :: Trying to initiate memory when memory has already been initiated.");
+    }
+    xlib_video_writef(OK);
+
+    xlib_video_writeString("    Verifying magic number...");
+    // Verify magic number
+    /*
+    if(magic != 0x1BADB002) {
+        xlib_sys_panic("xlib_memory_init :: Multiboot magic number mismatch.");
+    }*/
+    xlib_video_writef(OK);
+    xlib_video_writeString("        Magic number is: 0x");
+    xlib_video_writeString(xlib_misc_itoa(magic, 16));
+    xlib_video_newLine();
+
+    // Set last allocated to where to start allocating
+    xlib_video_writeString("    Recording starting position of available memory...");
+    xlib_memory_last = mbt->mem_upper;
+    xlib_video_writef(OK);
+    xlib_video_writeString("        Starting position of available memory is: 0x");
+    xlib_video_writeString(xlib_misc_itoa(xlib_memory_last, 16));
+    xlib_video_newLine();
+
+    xlib_video_writeString("    Preventing more memory initiations...");
+    xlib_memory_didInit = true;
+    xlib_video_writef(OK);
+}
+
+void* malloc(int size) {
+    if(xlib_memory_didInit) {
+        void* toReturn = (void*) xlib_memory_last;
+        xlib_memory_last += size;
+        return toReturn;
+    } else {
+        xlib_sys_panic("malloc :: Memory not initiated.");
+        return NULL;
+    }
+}
 
 ///
 /// end xlib memory functions

@@ -5,7 +5,11 @@
 #ifndef xlib_h
 #define xlib_h
 
+#define OK " [%gok%n]\n"
+
 #include <types.h>
+#include <memory/memory.h>
+#include <memory/multiboot.h>
 
 ///
 /// xlib_video
@@ -153,6 +157,7 @@ void xlib_sys_panic(char* message);
 ///
 /// xlib memory functions (no prefix because of how common they are)
 ///
+void xlib_memory_init(multiboot_info_t* mbt, unsigned int magic);
 void* malloc(int size);
 // TODO: free function
 
