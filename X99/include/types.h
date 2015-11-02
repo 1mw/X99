@@ -14,6 +14,8 @@ typedef signed int int64_t __attribute__((__mode__(__DI__)));
 typedef unsigned int uint64_t __attribute__((__mode__(__DI__)));
 #endif
 
+typedef unsigned long size_t;
+
 typedef enum {
     false,
     true

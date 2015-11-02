@@ -14,18 +14,20 @@ int xlib_video_row = 0;
 
 void xlib_video_writeString(const char* string)
 {
+	int color = 0x07;
         while(*string != 0) {
 		char* v = (char*) (xlib_video_VIDEO_MEMORY + (((xlib_video_row * 80) + xlib_video_column) * 2));
-        if(*string != '\n') {
-		*v = *string;
-		xlib_video_column++;
+	        if(*string != '\n') {
+			*v++ = *string;
+			*v++ = color;
+			xlib_video_column++;
 
-		if(xlib_video_column >= xlib_video_MAX_COLUMN) {
+			if(xlib_video_column >= xlib_video_MAX_COLUMN) {
+				xlib_video_newLine();
+			}
+	        } else {
 			xlib_video_newLine();
-		}
-        } else {
-		xlib_video_newLine();
-        }
+	        }
 
 		string++;
 	}
@@ -33,19 +35,18 @@ void xlib_video_writeString(const char* string)
 
 void xlib_video_writef(const char* formattedString)
 {
-	int color = 0;
+	int color = 0x07;
 	while(*formattedString != 0) {
 		char* v = (char*) (xlib_video_VIDEO_MEMORY + (((xlib_video_row * 80) + xlib_video_column) * 2));
 		if(*formattedString != '%') {
 			if(*formattedString != '\n') {
 				*v++ = *formattedString;
-			if(color != 0)
 				*v = color;
 
-			xlib_video_column++;
+				xlib_video_column++;
 
-			if(xlib_video_column >= xlib_video_MAX_COLUMN)
-				xlib_video_newLine();
+				if(xlib_video_column >= xlib_video_MAX_COLUMN)
+					xlib_video_newLine();
 			} else {
 				xlib_video_newLine();
 			}
@@ -93,6 +94,21 @@ void xlib_video_newLine()
 	if(xlib_video_row >= xlib_video_MAX_ROW) {
 		xlib_video_row = 0;
 	}
+}
+
+void xlib_video_clearScreen()
+{
+	int x, y;
+	for(x = 0; x < xlib_video_MAX_COLUMN; x++) {
+		for(y = 0; y < xlib_video_MAX_ROW; y++) {
+			char* mem = (char*) 0xb8000 + (((y * xlib_video_MAX_COLUMN) + x) * 2);
+			*mem++ = 0;
+			*mem++ = 0;
+		}
+	}
+	
+	xlib_video_row = 0;
+	xlib_video_column = 0;
 }
 
 ///
@@ -214,6 +230,38 @@ char* xlib_io_getLine()
 		}
 	}
 }
+
+char* xlib_io_strcpy(char* dst, const char* src)
+{
+	char *ptr;
+	ptr = dst;
+	while(*dst++ = *src++);
+	
+	return(ptr);
+}
+
+char* xlib_io_strcat(char* dst, const char* src)
+{
+	char *rdest = dst;
+
+	while (*dst) {
+		dst++;
+	}
+	
+	while (*dst++ = *src++);
+	
+	return rdest;
+}
+
+size_t xlib_io_strlen(const char* str)
+{
+	const char* s;
+	
+	for(s = str; *s; s++);
+	
+	return (s - str);
+}
+
 ///
 /// end xlib_io
 ///
@@ -260,7 +308,7 @@ void xlib_sys_panic(char* message)
 ///
 
 ///
-/// xlib_memory (some have no prefix because of how common they are)
+/// xlib_memory (some functions have no prefix because of how common they are)
 ///
 unsigned int xlib_memory_mmapStarts[100] = {0};
 unsigned int xlib_memory_mmapEnds[100] = {0};
@@ -272,7 +320,8 @@ unsigned int xlib_memory_mmapLastAddress;
 
 bool xlib_memory_didInit = false;
 
-void xlib_memory_init(multiboot_info_t* mbt, unsigned int magic) {
+void xlib_memory_init(multiboot_info_t* mbt, unsigned int magic)
+{
         xlib_video_writef(">> Initiating %mxlib_memory%n...\n");
         xlib_video_writeString("    Making sure memory was not already initiated...");
         // Make sure this is the first time
@@ -326,7 +375,8 @@ void xlib_memory_init(multiboot_info_t* mbt, unsigned int magic) {
         xlib_video_writef(OK);
 }
 
-void* malloc(int size) {
+void* malloc(int size)
+{
         if(xlib_memory_didInit) {
                 if(xlib_memory_mmapLastAddress == 0) {
 			xlib_memory_mmapLastIndex = 0;
@@ -365,6 +415,32 @@ void* malloc(int size) {
                 xlib_sys_panic("malloc :: Memory not initiated.");
                 return NULL;
         }
+}
+
+void* calloc(int size)
+{
+	void* ptr = malloc(size);
+	memset(ptr, 0, size);
+	
+	return ptr;
+}
+
+void* memset(void* dst, int c, size_t n)
+{
+	if(n) {
+		char* d = dst;
+		
+		do {
+			*d++ = c;
+		} while(--n);
+	}
+	
+	return dst;
+}
+
+void free(void* ptr)
+{
+	
 }
 
 ///

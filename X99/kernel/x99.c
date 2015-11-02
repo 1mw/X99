@@ -15,47 +15,19 @@ void kernel_main(multiboot_info_t* mbt, unsigned int magic)
 	// Initiate memory
 	xlib_memory_init(mbt, magic);
 	
-	// Done
+	xlib_video_writeString("Press any key to continue...");
+	xlib_io_getChar();
 	
-	int* a = malloc(sizeof(int));
-	*a = 5;
+	xlib_video_clearScreen();
 	
-	int* b = malloc(sizeof(int));
-	*b = 12345;
+	char* a = "Hello";
+	char* b = " World";
 	
-	xlib_video_writeString("a -> 0x");
-	xlib_video_writeString(xlib_misc_itoa((int) a, 16));
-	xlib_video_newLine();
+	char* d = malloc(sizeof(char) * (xlib_io_strlen(a) + xlib_io_strlen(b)));
+	xlib_io_strcpy(d, a);
+	xlib_io_strcat(d, b);
 	
-	xlib_video_writeString("*a -> ");
-	xlib_video_writeString(xlib_misc_itoa(*a, 10));
-	xlib_video_newLine();
+	xlib_video_writeString(d);
 	
-	xlib_video_writeString("b -> 0x");
-	xlib_video_writeString(xlib_misc_itoa((int) b, 16));
-	xlib_video_newLine();
-	
-	xlib_video_writeString("*b -> ");
-	xlib_video_writeString(xlib_misc_itoa(*b, 10));
-	xlib_video_newLine();
-	
-	int tmp = *a;
-	*a = *b;
-	*b = tmp;
-	
-	xlib_video_writeString("a -> 0x");
-	xlib_video_writeString(xlib_misc_itoa((int) a, 16));
-	xlib_video_newLine();
-	
-	xlib_video_writeString("*a -> ");
-	xlib_video_writeString(xlib_misc_itoa(*a, 10));
-	xlib_video_newLine();
-	
-	xlib_video_writeString("b -> 0x");
-	xlib_video_writeString(xlib_misc_itoa((int) b, 16));
-	xlib_video_newLine();
-	
-	xlib_video_writeString("*b -> ");
-	xlib_video_writeString(xlib_misc_itoa(*b, 10));
-	xlib_video_newLine();
+	xlib_sys_panic("kernel :: Reached end of execution.");
 }

@@ -22,6 +22,7 @@ int xlib_video_row;
 void xlib_video_writeString(const char* string);
 void xlib_video_writef(const char* formattedString);
 void xlib_video_newLine();
+void xlib_video_clearScreen();
 
 ///
 /// end xlib_video
@@ -111,6 +112,11 @@ unsigned int xlib_io_getAndAnalyzeScancode();
 char xlib_io_getChar();
 char* xlib_io_getLine();
 
+char* xlib_io_strcpy(char* dst, const char* src);
+char* xlib_io_strcat(char* dst, const char* src);
+size_t xlib_io_strlen(const char* str);
+
+
 static unsigned char xlib_io_asciiNonShift[] = {
 NULL, ESC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', BACKSPACE,
 TAB, 'q', 'w',   'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',   '[', ']', ENTER, 0,
@@ -159,7 +165,10 @@ void xlib_sys_panic(char* message);
 ///
 void xlib_memory_init(multiboot_info_t* mbt, unsigned int magic);
 void* malloc(int size);
-// TODO: free function
+void* calloc(int size);
+void* memset(void* dst, int c, size_t n);
+void free(void* ptr);
+// TODO: implement free function
 
 ///
 /// end xlib memory functions
