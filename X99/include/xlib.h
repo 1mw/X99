@@ -21,6 +21,9 @@ int xlib_video_column;
 int xlib_video_row;
 void xlib_video_writeString(const char* string);
 void xlib_video_writef(const char* formattedString);
+void xlib_video_writeChar(const char character);
+void xlib_video_writeLine(const char* line);
+void xlib_video_writeLinef(const char* formattedLine);
 void xlib_video_newLine();
 void xlib_video_clearScreen();
 
@@ -107,14 +110,15 @@ char* xlib_misc_itoa(int val, int base);
 
 #define MAXKEYBUFFER 64               // max keyboard buffer
 
-char xlib_io_getScancode();
-unsigned int xlib_io_getAndAnalyzeScancode();
-char xlib_io_getChar();
-char* xlib_io_getLine();
+char xlib_io_getScancode(void);
+unsigned int xlib_io_getAndAnalyzeScancode(void);
+char xlib_io_getChar(void);
+char* xlib_io_getLine(void);
 
 char* xlib_io_strcpy(char* dst, const char* src);
 char* xlib_io_strcat(char* dst, const char* src);
 size_t xlib_io_strlen(const char* str);
+int xlib_io_strcmp(const char* s1, const char* s2);
 
 
 static unsigned char xlib_io_asciiNonShift[] = {

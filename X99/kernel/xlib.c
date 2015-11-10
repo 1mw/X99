@@ -86,7 +86,7 @@ void xlib_video_writef(const char* formattedString)
 	}
 }
 
-void xlib_video_newLine()
+void xlib_video_newLine(void)
 {
 	xlib_video_column = 0;
 	xlib_video_row++;
@@ -96,7 +96,7 @@ void xlib_video_newLine()
 	}
 }
 
-void xlib_video_clearScreen()
+void xlib_video_clearScreen(void)
 {
 	int x, y;
 	for(x = 0; x < xlib_video_MAX_COLUMN; x++) {
@@ -111,6 +111,27 @@ void xlib_video_clearScreen()
 	xlib_video_column = 0;
 }
 
+void xlib_video_writeChar(const char character)
+{
+	char string[2];
+	string[0] = character;
+	string[1] = '\0';
+	
+	xlib_video_writeString(string);
+}
+
+void xlib_video_writeLine(const char* line)
+{
+	xlib_video_writeString(line);
+	xlib_video_newLine();
+}
+
+void xlib_video_writeLinef(const char* formattedLine)
+{
+	xlib_video_writef(formattedLine);
+	xlib_video_newLine();
+}
+
 ///
 /// end xlib_video
 ///
@@ -120,12 +141,12 @@ void xlib_video_clearScreen()
 ///
 bool shiftKeyIsDown = false;
 
-char xlib_io_getScancode()
+char xlib_io_getScancode(void)
 {
 	return xlib_io_inb(0x60);
 }
 
-unsigned int xlib_io_getAndAnalyzeScancode()
+unsigned int xlib_io_getAndAnalyzeScancode(void)
 {
         unsigned int scancode;
         while(1) {
@@ -160,7 +181,7 @@ unsigned int xlib_io_getAndAnalyzeScancode()
         }
 }
 
-char xlib_io_getChar()
+char xlib_io_getChar(void)
 {
         unsigned int scan;
         unsigned char retchar;
@@ -176,7 +197,7 @@ char xlib_io_getChar()
 }
 
 // Returns a max of 400 characters
-char* xlib_io_getLine()
+char* xlib_io_getLine(void)
 {
 	int startPos = xlib_video_row * 80 + xlib_video_column;
 	char buf[400] = {0};
@@ -260,6 +281,25 @@ size_t xlib_io_strlen(const char* str)
 	for(s = str; *s; s++);
 	
 	return (s - str);
+}
+
+int xlib_io_strcmp(const char* s1, const char* s2)
+{
+	const unsigned char *p1 = (const unsigned char *)s1;
+	const unsigned char *p2 = (const unsigned char *)s2;
+
+	while (*p1 != '\0') {
+		if (*p2 == '\0') return  1;
+		if (*p2 > *p1)   return -1;
+		if (*p1 > *p2)   return  1;
+
+		p1++;
+		p2++;
+	}
+
+	if (*p2 != '\0') return -1;
+
+	return 0;
 }
 
 ///

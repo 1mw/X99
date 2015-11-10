@@ -6,6 +6,7 @@
 #include <xlib.h>
 #include <memory/memory.h>
 #include <memory/multiboot.h>
+#include <xlang/xlang.h>
 
 void kernel_main(multiboot_info_t* mbt, unsigned int magic)
 {
@@ -20,14 +21,7 @@ void kernel_main(multiboot_info_t* mbt, unsigned int magic)
 	
 	xlib_video_clearScreen();
 	
-	char* a = "Hello";
-	char* b = " World";
-	
-	char* d = malloc(sizeof(char) * (xlib_io_strlen(a) + xlib_io_strlen(b)));
-	xlib_io_strcpy(d, a);
-	xlib_io_strcat(d, b);
-	
-	xlib_video_writeString(d);
+	xlang_test("int ");
 	
 	xlib_sys_panic("kernel :: Reached end of execution.");
 }
