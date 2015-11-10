@@ -92,7 +92,7 @@ void xlib_video_newLine(void)
 	xlib_video_row++;
 	
 	if(xlib_video_row >= xlib_video_MAX_ROW) {
-		xlib_video_row = 0;
+		xlib_video_clearScreen();
 	}
 }
 
