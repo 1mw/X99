@@ -156,7 +156,7 @@ unsigned int xlib_io_getAndAnalyzeScancode(void)
 		
                 scancode = xlib_io_getScancode();
 		
-                if (((scancode&0x7f) == 0x2a) || ((scancode&0x7f) == 0x36)) {
+                if (((scancode & 0x7f) == 0x2a) || ((scancode & 0x7f) == 0x36)) {
         		/*
         		 * Next key may use shift table
         		 */
