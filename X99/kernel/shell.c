@@ -1,5 +1,7 @@
 #include <shell.h>
 #include <xlib.h>
+#include <memory/memory.h>
+#include <types.h>
 
 void shell_init(void)
 {
@@ -26,6 +28,36 @@ void shell_start(void)
 		if(xlib_io_strcmp(shell_command, "exit") == 0) {
 			shell_deinit();
 			return;
+		}
+		if(xlib_io_strcmp(shell_command, "pmem") == 0) {
+			xlib_video_clearScreen();
+			int i;
+			for(i = 0; i < xlib_memory_numberOfEntries; i++) {
+				xlib_video_writeLinef("%gpmem");
+				xlib_video_writeString("Entry #");
+				xlib_video_writeString(xlib_misc_itoa(i, 10));
+				xlib_video_newLine();
+				xlib_video_writef("    %rstart%n -> 0x");
+				xlib_video_writeString(xlib_misc_itoa(xlib_memory_mmapStarts[i], 16));
+				xlib_video_newLine();
+				
+				xlib_video_writef("    %rend%n -> 0x");
+				xlib_video_writeString(xlib_misc_itoa(xlib_memory_mmapEnds[i], 16));
+				xlib_video_newLine();
+				
+				xlib_video_writef("    %rlength%n -> 0x");
+				xlib_video_writeString(xlib_misc_itoa(xlib_memory_mmapLength[i], 16));
+				xlib_video_newLine();
+				
+				xlib_video_writef("    %rtype%n -> 0x");
+				xlib_video_writeString(xlib_misc_itoa(xlib_memory_mmapType[i], 16));
+				xlib_video_newLine();
+				
+				xlib_video_writef("Press any key to display next entry...");
+				xlib_io_getChar();
+				xlib_video_clearScreen();
+			}
+			continue;
 		}
 		
 		// TODO: Add custom shell_commands/programs here

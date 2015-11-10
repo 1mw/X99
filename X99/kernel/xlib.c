@@ -4,6 +4,7 @@
 
 #include <xlib.h>
 #include <types.h>
+#include <memory/memory.h>
 
 ///
 /// xlib_video
@@ -350,6 +351,7 @@ void xlib_sys_panic(char* message)
 ///
 /// xlib_memory (some functions have no prefix because of how common they are)
 ///
+
 unsigned int xlib_memory_mmapStarts[100] = {0};
 unsigned int xlib_memory_mmapEnds[100] = {0};
 unsigned int xlib_memory_mmapType[100] = {0};
