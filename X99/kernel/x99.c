@@ -1,6 +1,7 @@
-// x99.c
-//
-// The main kernel file.
+///
+/// x99.c
+/// X99 kernel entry.
+///
 
 #include <x99.h>
 #include <xlib.h>

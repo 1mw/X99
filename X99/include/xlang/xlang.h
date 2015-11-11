@@ -1,3 +1,8 @@
+///
+/// xlang.h
+/// The xlang interpreter specifications.
+///
+
 #ifndef xlang_h
 #define xlang_h
 

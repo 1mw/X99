@@ -1,4 +1,7 @@
-// types.h
+///
+/// types.h
+/// Special types that X99 uses.
+///
 
 #ifndef types_h
 #define types_h

@@ -1,6 +1,7 @@
-// xlib.c
-//
-// The implementation of xlib, the standard library for X99.
+///
+/// xlib.c
+/// xlib implementation. xlib is the X99 standard library.
+///
 
 #include <xlib.h>
 #include <types.h>

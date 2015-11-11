@@ -1,6 +1,7 @@
-// xlib.h
-//
-// The definition of xlib, the standard library for X99.
+///
+/// xlib.h
+/// The xlib specifications. xlib is the X99 standard library.
+///
 
 #ifndef xlib_h
 #define xlib_h

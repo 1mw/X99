@@ -1,4 +1,7 @@
-// X99 Shell
+///
+/// shell.h
+/// The X99 shell specifications.
+///
 
 #ifndef shell_h
 #define shell_h
@@ -8,6 +11,8 @@
 typedef struct shell_buffer {
 	char data[80 * 25];
 	char formatting[80 * 25];
+	int x;
+	int y;
 } shell_buffer_t;
 
 char* shell_command;

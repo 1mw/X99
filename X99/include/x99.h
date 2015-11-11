@@ -1,6 +1,7 @@
-// x99.h
-//
-// The definition of the kernel.
+///
+/// x99.h
+/// X99 kernel specification.
+///
 
 #ifndef x99_h
 #define x99_h
