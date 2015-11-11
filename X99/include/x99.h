@@ -6,6 +6,9 @@
 #ifndef x99_h
 #define x99_h
 
+///
+/// Kernel entry.
+///
 void kernel_main();
 
 #endif
