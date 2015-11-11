@@ -3,6 +3,29 @@
 #include <memory/memory.h>
 #include <types.h>
 
+void shell_preserveBuffer(shell_buffer_t* buffer)
+{
+	for(int y = 0; y < xlib_video_MAX_ROW; y++) {
+		for(int x = 0; x < xlib_video_MAX_COLUMN; x++) {
+			char* v = (char*) (xlib_video_VIDEO_MEMORY + (((x * 80) + y) * 2));
+			buffer->data[y * 80 + x] = *v;
+			v++;
+			buffer->formatting[y * xlib_video_MAX_COLUMN + x] = *v;
+		}
+	}
+}
+
+void shell_applyBuffer(shell_buffer_t* buffer)
+{
+	for(int y = 0; y < xlib_video_MAX_ROW; y++) {
+		for(int x = 0; x < xlib_video_MAX_COLUMN; x++) {
+			char* v = (char*) (xlib_video_VIDEO_MEMORY + (((xlib_video_row * 80) + xlib_video_column) * 2));
+			*v++ = buffer->data[y * xlib_video_MAX_COLUMN + x];
+			*v = buffer->formatting[y * xlib_video_MAX_COLUMN + x];
+		}
+	}
+}
+
 void shell_init(void)
 {
 	// Allocate shell_command to be the maximum amount of characters that
@@ -30,7 +53,10 @@ void shell_start(void)
 			return;
 		}
 		if(xlib_io_strcmp(shell_command, "pmem") == 0) {
+			shell_buffer_t* buffer = malloc(sizeof(shell_buffer_t));
+			shell_preserveBuffer(buffer);
 			xlib_video_clearScreen();
+			
 			int i;
 			for(i = 0; i < xlib_memory_numberOfEntries; i++) {
 				xlib_video_writeLinef("%gpmem");
@@ -57,6 +83,8 @@ void shell_start(void)
 				xlib_io_getChar();
 				xlib_video_clearScreen();
 			}
+			shell_applyBuffer(buffer);
+			free(buffer);
 			continue;
 		}
 		
