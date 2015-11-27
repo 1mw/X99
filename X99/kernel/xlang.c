@@ -2,7 +2,7 @@
 /// xlang.c
 /// X99 interpreter implementation.
 ///
-
+/*
 #include <xlang/xlang.h>
 #include <xlib.h>
 
@@ -17,7 +17,7 @@ int xlang_executeScript(char* src)
 	
 	{
 		char* x;
-		for(x = src; ; x++) {
+		for(x = src; *x != 0; ) {
 			// Determine if the character is an operator
 			bool isOperator = xlang_isOperator(x);
 			if(isOperator) {
@@ -27,7 +27,13 @@ int xlang_executeScript(char* src)
 				}
 				// TODO: Implement operators
 			} else {
-				
+				bool isType = xlang_isType(x);
+				if(isType) {
+					xlang_type_t type = xlang_getType(x);
+					
+				} else {
+					
+				}
 			}
 		}
 	}
@@ -115,4 +121,4 @@ int xlang_getNextSeparator(char* characterInSource)
 
 
 
-
+*/

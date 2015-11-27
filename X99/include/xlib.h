@@ -36,6 +36,7 @@ void xlib_video_clearScreen();
 /// xlib_misc
 ///
 char* xlib_misc_itoa(int val, int base);
+int xlib_misc_isdigit(int c);
 ///
 /// end xlib_misc
 ///
@@ -120,7 +121,10 @@ char* xlib_io_strcpy(char* dst, const char* src);
 char* xlib_io_strcat(char* dst, const char* src);
 size_t xlib_io_strlen(const char* str);
 int xlib_io_strcmp(const char* s1, const char* s2);
-
+bool xlib_io_strstart(const char* string, const char* prefix);
+int xlib_io_strncmp(const char* s1, const char* s2, size_t n);
+char* xlib_io_strchr(const char* s, int c);
+int xlib_io_atoi(const char* str);
 
 static unsigned char xlib_io_asciiNonShift[] = {
 NULL, ESC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', BACKSPACE,
@@ -158,7 +162,7 @@ __attribute__((always_inline)) static inline uint8_t xlib_io_inb(uint16_t port)
 /// xlib_sys
 ///
 
-void xlib_sys_panic(char* message);
+void xlib_sys_panic(char* message, char* file, char* function, int line);
 
 
 ///
@@ -174,7 +178,7 @@ void* calloc(int size);
 void* memset(void* dst, int c, size_t n);
 void free(void* ptr);
 // TODO: implement free function
-
+void memcpy(void* dest, void* src, size_t n);
 ///
 /// end xlib memory functions
 ///

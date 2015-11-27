@@ -304,6 +304,62 @@ int xlib_io_strcmp(const char* s1, const char* s2)
 	return 0;
 }
 
+bool xlib_io_strstart(const char* string, const char* prefix)
+{
+	while(*prefix) {
+		if(*prefix++ != *string++) {
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+int xlib_io_strncmp(const char* s1, const char* s2, size_t n)
+{
+	for(; n > 0; s1++, s2++, --n) {
+		if(*s1 != *s2) {
+			return ((*(unsigned char*) s1 < *(unsigned char*) s2) ? -1 : +1);
+		} else if(*s1 == '\0') {
+			return 0;
+		}
+	}
+	return 0;
+}
+
+char* xlib_io_strchr(const char* s, int c)
+{
+	const char ch = c;
+	
+	for(; *s != ch; s++) {
+		if(*s == '\0') {
+			return 0;
+		}
+	}
+	return (char*) s;
+}
+
+int xlib_io_atoi(const char* s)
+{
+	if(*s == NULL) {
+		return 0;
+	}
+	
+	int i,num=0,sign=1;
+
+	for(i=0;s[i];i++)
+        {
+                if(s[i]==' ')
+                        continue;
+                else if(s[i]=='-') sign=-1;
+                else break;
+        }
+        
+        for(;s[i] && s[i]>='0' && s[i]<='9';i++)
+                num=num*10 + s[i]-'0';
+        return num*sign;
+}
+
 ///
 /// end xlib_io
 ///
@@ -319,12 +375,27 @@ char* xlib_misc_itoa(int val, int base)
 
         static char buf[32] = {0};
         int i = 30;
-
+	
+	bool neg = val < 0;
+	if(neg) {
+		val *= -1;
+	}
+	
         for(; val && i; i--, val /= base) {
                 buf[i] = "0123456789abcedf"[val % base];
         }
+	
+	if(neg) {
+		buf[i] = '-';
+		i--;
+	}
 
         return &buf[i + 1];
+}
+
+int xlib_misc_isdigit(int c)
+{
+	return ((c >= '0') && (c <= '9'));
 }
 
 ///
@@ -334,12 +405,21 @@ char* xlib_misc_itoa(int val, int base)
 ///
 /// xlib_sys
 ///
-void xlib_sys_panic(char* message)
+
+// "file" and "line" should be "__FILE__" and "__LINE__" respectively
+void xlib_sys_panic(char* message, char* file, char* function, int line)
 {
         // Tell user that we panicked and why
         xlib_video_newLine();
-        xlib_video_writef("%rPANIC: ");
+        xlib_video_writef("%rKERNEL PANIC");
+	xlib_video_writef("\n%rMESSAGE:  ");
         xlib_video_writef(message);
+	xlib_video_writef("\n%rFILE:     ");
+	xlib_video_writeString(file);
+	xlib_video_writef("\n%rFUNCTION: ");
+	xlib_video_writeString(function);
+	xlib_video_writef("\n%rLINE:     ");
+	xlib_video_writeString(xlib_misc_itoa(line, 10));
 
         // Hang
         while(1);
@@ -369,13 +449,13 @@ void xlib_memory_init(multiboot_info_t* mbt, unsigned int magic)
         xlib_video_writeString("    Making sure memory was not already initiated...");
         // Make sure this is the first time
         if(xlib_memory_didInit) {
-        	xlib_sys_panic("xlib_memory_init :: Trying to initiate memory when memory has already been initiated.");
+        	xlib_sys_panic("xlib_memory_init :: Trying to initiate memory when memory has already been initiated.", __FILE__, __FUNCTION__, __LINE__);
         }
         xlib_video_writef(OK);
 
 	xlib_video_writeString("    Checking to see if GRUB's mmap_* fields are valid...");
 	if(!multiboot_checkFlag(mbt->flags, 1)) {
-		xlib_sys_panic("xlib_memory_init :: GRUB's mmap_* fields are not valid. Cannot initialize memory.");
+		xlib_sys_panic("xlib_memory_init :: GRUB's mmap_* fields are not valid. Cannot initialize memory.", __FILE__, __FUNCTION__, __LINE__);
 	}
 	xlib_video_writef(OK);
 
@@ -445,7 +525,7 @@ void* malloc(int size)
 			xlib_memory_mmapLastIndex++;
 			
 			if(xlib_memory_mmapLastIndex > xlib_memory_numberOfEntries) {
-				xlib_sys_panic("malloc :: Out of memory!");
+				xlib_sys_panic("malloc :: Out of memory!", __FILE__, __FUNCTION__, __LINE__);
 			}
 			
 			if(xlib_memory_mmapType[xlib_memory_mmapLastIndex] != 1 || xlib_memory_mmapLength[xlib_memory_mmapLastIndex] == 0 || xlib_memory_mmapStarts[xlib_memory_mmapLastIndex] == 0) {
@@ -455,7 +535,7 @@ void* malloc(int size)
 			goto start;
 		}
         } else {
-                xlib_sys_panic("malloc :: Memory not initiated.");
+                xlib_sys_panic("malloc :: Memory not initiated.", __FILE__, __FUNCTION__, __LINE__);
                 return NULL;
         }
 }
@@ -484,6 +564,30 @@ void* memset(void* dst, int c, size_t n)
 void free(void* ptr)
 {
 	
+}
+
+void memcpy(void* dst, void* src, size_t n)
+{/*
+	// Cast pointers to bytes
+	char* csrc = (char*) src;
+	char* cdst = (char*) dst;
+	
+	// Temporary array
+	char* tmp = malloc(sizeof(char) * n);
+	
+	// Copy data from csrc to tmp
+	int x;
+	for(x = 0; x < n; x++) {
+		*(tmp[x]) = *(csrc[x]);
+	}
+	
+	// Copy data from tmp to cdst
+	int y;
+	for(y = 0; y < n; y++) {
+		*(cdst[y]) = *(tmp[y]);
+	}
+	
+	free(tmp);*/
 }
 
 ///

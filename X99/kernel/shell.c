@@ -7,6 +7,8 @@
 #include <xlib.h>
 #include <memory/memory.h>
 #include <types.h>
+#include <brain.h>
+#include <machine.h>
 
 void shell_preserveBuffer(shell_buffer_t* buffer)
 {
@@ -107,6 +109,27 @@ void shell_start(void)
 			free(buffer);
 			continue;
 		}
+		
+		if(xlib_io_strstart(shell_command, "brain ")) {
+			char* src = malloc(sizeof(char) * 390);
+			xlib_io_strcpy(src, shell_command + 6);
+			brain_exec(src);
+			continue;
+		}
+		
+		if(xlib_io_strstart(shell_command, "machine")) {
+			machine_inputAndExec();
+			continue;
+		}
+		
+		/*if(xlib_io_strstart(shell_command, "xlangexec ")) {
+			// 390 because shell_command is max 400 and "xlangexec "
+			// is 10 characters.
+			char* code = malloc(sizeof(char) * 390);
+			xlib_io_strcpy(code, shell_command + 10);
+			xlang_executeScript(code);
+			continue;
+		}*/
 		
 		// TODO: Add custom shell_commands/programs here
 		xlib_video_writeString(shell_command);
