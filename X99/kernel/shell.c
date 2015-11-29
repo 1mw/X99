@@ -9,6 +9,7 @@
 #include <types.h>
 #include <brain.h>
 #include <machine.h>
+#include <g.h>
 
 void shell_preserveBuffer(shell_buffer_t* buffer)
 {
@@ -119,6 +120,11 @@ void shell_start(void)
 		
 		if(xlib_io_strstart(shell_command, "machine")) {
 			machine_inputAndExec();
+			continue;
+		}
+		
+		if(xlib_io_strstart(shell_command, "glang")) {
+			g_inputAndExec();
 			continue;
 		}
 		
