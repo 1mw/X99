@@ -25,8 +25,8 @@ void xlib_video_writef(const char* formattedString);
 void xlib_video_writeChar(const char character);
 void xlib_video_writeLine(const char* line);
 void xlib_video_writeLinef(const char* formattedLine);
-void xlib_video_newLine();
-void xlib_video_clearScreen();
+void xlib_video_newLine(void);
+void xlib_video_clearScreen(void);
 
 ///
 /// end xlib_video

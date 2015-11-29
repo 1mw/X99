@@ -38,7 +38,7 @@ int g_getRegistryTie(const char* name)
 	return -1;
 }
 
-int g_inputAndExec()
+int g_inputAndExec(void)
 {
 	xlib_video_clearScreen();
 	xlib_video_writef("%rWelcome to g! Press any key to start typing your source.");

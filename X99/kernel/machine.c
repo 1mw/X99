@@ -1,7 +1,7 @@
 #include <machine.h>
 #include <xlib.h>
 
-int machine_inputAndExec()
+int machine_inputAndExec(void)
 {
 	xlib_video_clearScreen();
 	xlib_video_writef("%rWelcome to Machine! Press any key to start typing your source.\n%n    - Once you press enter, you will not be able to edit the line you just finished.\n    - The limit for sources is 1000 lines.\n    - When you are done, type \"EOF\" to end your source and execute.\nCommands:\n    - push <num> -> Push a number onto the stack.\n    - pop -> Pop a number off the stack.\n    - add -> Pop the first two numbers off the stack, add them, and push their sum.\n    - ifeq <address> -> If the top of the stack is 0, continue, else, jump to <address>\n    - jump <address> -> Jump to <address>.\n    - print -> Print the value at the top of the stack.\n    - dup -> Push a copy of the first number on the stack back onto the stack.\n    - printc -> Print the value at the top of the stack AS A CHARACTER.");
