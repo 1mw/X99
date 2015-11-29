@@ -6,10 +6,6 @@ int g_inputAndExec();
 /*
 G is a programming language for the X99 operating system.
 
-"$" is used for variables. Ex:
-	- $var1
-	- $var2
-
 "@" is used for operators. Ex:
 	- @+ (num1) :: (num2) :: (result)
 	- @- (num1) :: (num2) :: (result)
