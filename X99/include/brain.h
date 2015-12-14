@@ -1,3 +1,8 @@
+///
+/// brain.h
+/// Specification of a brainfuck interpreter.
+///
+
 #ifndef brain_h
 #define brain_h
 

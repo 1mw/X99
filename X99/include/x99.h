@@ -6,7 +6,7 @@
 #ifndef x99_h
 #define x99_h
 
-#include <multiboot.h>
+#include <memory/multiboot.h>
 
 ///
 /// Kernel entry.

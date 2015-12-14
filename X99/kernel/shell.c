@@ -9,7 +9,6 @@
 #include <types.h>
 #include <brain.h>
 #include <machine.h>
-#include <g.h>
 
 void shell_preserveBuffer(shell_buffer_t* buffer)
 {
@@ -76,8 +75,8 @@ void shell_start(void)
 			continue;
 		}
 		if(xlib_io_strcmp(shell_command, "pmem") == 0) {
-			shell_buffer_t* buffer = malloc(sizeof(shell_buffer_t));
-			shell_preserveBuffer(buffer);
+			// shell_buffer_t* buffer = malloc(sizeof(shell_buffer_t));
+			// shell_preserveBuffer(buffer);
 			xlib_video_clearScreen();
 			
 			int i;
@@ -106,8 +105,8 @@ void shell_start(void)
 				xlib_io_getChar();
 				xlib_video_clearScreen();
 			}
-			shell_applyBuffer(buffer);
-			free(buffer);
+			// shell_applyBuffer(buffer);
+			// free(buffer);
 			continue;
 		}
 		
@@ -122,20 +121,6 @@ void shell_start(void)
 			machine_inputAndExec();
 			continue;
 		}
-		
-		if(xlib_io_strstart(shell_command, "glang")) {
-			g_inputAndExec();
-			continue;
-		}
-		
-		/*if(xlib_io_strstart(shell_command, "xlangexec ")) {
-			// 390 because shell_command is max 400 and "xlangexec "
-			// is 10 characters.
-			char* code = malloc(sizeof(char) * 390);
-			xlib_io_strcpy(code, shell_command + 10);
-			xlang_executeScript(code);
-			continue;
-		}*/
 		
 		// TODO: Add custom shell_commands/programs here
 		xlib_video_writeString(shell_command);

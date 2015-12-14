@@ -1,6 +1,6 @@
 ///
 /// memory.c
-/// Special memory implementations, if there needs to be.
+/// Special memory implementations.
 ///
 
 #include <memory/memory.h>

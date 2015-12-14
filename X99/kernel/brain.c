@@ -1,3 +1,8 @@
+///
+/// brain.c
+/// Implementation of a brainfuck interpreter.
+///
+
 #include <brain.h>
 #include <types.h>
 #include <xlib.h>

@@ -1,3 +1,8 @@
+///
+/// machine.c
+/// Implementation of a fairly simple turing-comptabible programming language.
+///
+
 #include <machine.h>
 #include <xlib.h>
 

@@ -7,7 +7,6 @@
 #include <xlib.h>
 #include <memory/memory.h>
 #include <memory/multiboot.h>
-// #include <xlang/xlang.h>
 #include <shell.h>
 
 void kernel_main(multiboot_info_t* mbt, unsigned int magic)
