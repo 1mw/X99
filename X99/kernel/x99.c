@@ -11,6 +11,7 @@
 
 void kernel_main(multiboot_info_t* mbt, unsigned int magic)
 {
+	/*
 	// Write first message
 	xlib_video_writef("%rX99 ");
 	xlib_video_writeString("(Kernel was compiled at ");
@@ -30,4 +31,17 @@ void kernel_main(multiboot_info_t* mbt, unsigned int magic)
 	shell_start();
 	
 	xlib_sys_panic("kernel :: Reached end of execution.", __FILE__, __FUNCTION__, __LINE__);
+	*/
+
+	// Temp main function for VGA testing
+	xlib_memory_init(mbt, magic);
+	xlib_vga_init(320, 200, 256);
+	// xlib_vga_address[xlib_vga_width * 2 * 2] = 0x0e;
+
+	int x, y;
+	for(y = 0; y < 200; y++) {
+		for(x = 0; x < 320; x++) {
+			xlib_vga_address[xlib_vga_width * y + x] = (x % 2 == 0) ? 0x00 : 0x02;
+		}
+	}
 }

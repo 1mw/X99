@@ -28,6 +28,16 @@ void xlib_video_writeLinef(const char* formattedLine);
 void xlib_video_newLine(void);
 void xlib_video_clearScreen(void);
 
+// real VGA stuff
+void xlib_vga_init(int width, int height, int bpp);
+void write_registers(unsigned char *regs);
+void xlib_vga_clear_screen();
+extern unsigned int xlib_vga_width;
+extern unsigned int xlib_vga_height;
+extern unsigned int xlib_vga_bpp;
+extern unsigned char *xlib_vga_address;
+
+
 ///
 /// end xlib_video
 ///
